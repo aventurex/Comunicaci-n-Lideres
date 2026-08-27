@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Escenario: Nuevo comunicado, nuevas prioridades</title>
+<style>
+:root{
+  --blue:#003DA5;
+  --blue-dark:#00245F;
+  --blue-soft:#EAF3FF;
+  --orange:#FF6B00;
+  --orange-soft:#FFF1E7;
+  --green:#2E7D32;
+  --green-soft:#EAF6EC;
+  --amber:#9A6700;
+  --amber-soft:#FFF7D6;
+  --red:#B42318;
+  --red-soft:#FDECEC;
+  --ink:#172033;
+  --muted:#5F6B7A;
+  --line:#D8E1EC;
+  --panel:rgba(255,255,255,.96);
+  --shadow:0 18px 45px rgba(12,34,72,.16);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+html,body{margin:0;padding:0;background:#F4F7FB;font-family:Arial,Helvetica,sans-serif;color:var(--ink)}
+button{font:inherit}
+.app{
+  width:min(1120px,100%);
+  margin:0 auto;
+  min-height:100vh;
+  background:white;
+  border-left:1px solid var(--line);
+  border-right:1px solid var(--line);
+}
+.topbar{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:12px 18px;
+  color:white;background:linear-gradient(90deg,var(--blue-dark),var(--blue));
+  box-shadow:0 2px 10px rgba(0,0,0,.12)
+}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.mark{width:12px;height:30px;background:var(--orange);border-radius:8px 2px 8px 2px;transform:skew(-12deg);flex:none}
+.kicker{font-size:11px;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+.title{font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.progress-wrap{display:flex;align-items:center;gap:9px;font-size:12px;white-space:nowrap}
+.progress{width:160px;height:7px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden}
+.progress>span{display:block;height:100%;width:0;background:#fff;transition:width .35s ease}
+
+.screen{display:none}
+.screen.active{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+.hero{
+  min-height:610px;
+  position:relative;overflow:hidden;
+  background:
+    linear-gradient(90deg,rgba(0,31,91,.88) 0%,rgba(0,45,125,.65) 40%,rgba(0,0,0,.10) 75%),
+    url("fondo.png") center/cover no-repeat;
+}
+.hero-copy{
+  position:relative;z-index:3;
+  width:min(620px,65%);
+  padding:52px 34px 30px;
+  color:white
+}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 10px;border-radius:999px;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.25);
+  font-size:12px;margin-bottom:14px
+}
+.hero h1{font-size:37px;line-height:1.08;margin:0 0 12px}
+.hero p{font-size:16px;line-height:1.55;margin:0 0 20px;max-width:590px}
+.notice{
+  width:min(520px,95%);
+  background:rgba(255,255,255,.96);color:var(--ink);
+  border-radius:18px;padding:16px 17px;box-shadow:var(--shadow)
+}
+.notice-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-bottom:9px
+}
+.notice-label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--blue);font-weight:700}
+.practice{font-size:10px;color:#7A5860;background:#FFE9EA;border-radius:999px;padding:5px 8px;font-weight:700}
+.notice h2{font-size:17px;margin:0 0 8px}
+.priority-list{display:grid;gap:7px}
+.priority{
+  display:grid;grid-template-columns:26px 1fr;gap:9px;align-items:start;
+  font-size:13px;line-height:1.35
+}
+.num{
+  width:24px;height:24px;border-radius:50%;background:var(--orange);color:white;
+  display:grid;place-items:center;font-weight:700;font-size:12px
+}
+.hero-character{
+  position:absolute;right:1.5%;bottom:-24px;z-index:2;
+  height:92%;max-height:620px;filter:drop-shadow(0 18px 22px rgba(0,0,0,.25))
+}
+.start-actions{margin-top:17px;display:flex;gap:10px;flex-wrap:wrap}
+.btn{
+  border:0;border-radius:12px;padding:11px 15px;font-weight:700;cursor:pointer;
+  transition:.16s ease
+}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--orange);color:white}
+.btn-secondary{background:#EDF2F7;color:#29384D}
+.btn-ghost{background:rgba(255,255,255,.14);color:white;border:1px solid rgba(255,255,255,.27)}
+
+.stage{
+  min-height:690px;position:relative;overflow:hidden;
+  background:
+    linear-gradient(rgba(245,248,252,.42),rgba(245,248,252,.42)),
+    url("fondo.png") center/cover no-repeat;
+}
+.stage::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.55));
+  pointer-events:none
+}
+.stage-inner{
+  position:relative;z-index:2;
+  min-height:690px;padding:22px 24px 26px
+}
+.step-row{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px
+}
+.step-chip{
+  display:inline-flex;gap:8px;align-items:center;
+  background:rgba(0,61,165,.93);color:white;border-radius:999px;
+  padding:7px 11px;font-size:12px;font-weight:700
+}
+.timer-chip{
+  background:rgba(255,255,255,.92);border:1px solid var(--line);
+  border-radius:999px;padding:7px 11px;font-size:12px;color:var(--muted)
+}
+.scene{
+  position:relative;min-height:530px;
+  display:grid;grid-template-columns:34% 66%;gap:18px;align-items:end
+}
+.character-zone{
+  position:relative;min-height:520px
+}
+.character{
+  position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);
+  height:500px;max-width:100%;object-fit:contain;
+  filter:drop-shadow(0 14px 16px rgba(0,0,0,.22))
+}
+.character.small{height:450px}
+.dialogue-panel{
+  align-self:center;background:var(--panel);border:1px solid var(--line);
+  border-radius:20px;padding:18px;box-shadow:var(--shadow)
+}
+.speaker{
+  display:flex;align-items:center;gap:9px;margin-bottom:8px
+}
+.speaker-dot{width:10px;height:10px;border-radius:50%;background:var(--orange)}
+.speaker-name{font-size:13px;font-weight:700;color:var(--blue)}
+.dialogue{
+  font-size:18px;line-height:1.45;margin:0 0 14px
+}
+.context{
+  font-size:13px;line-height:1.45;color:var(--muted);
+  background:#F7F9FC;border:1px solid var(--line);border-radius:12px;
+  padding:10px 12px;margin-bottom:14px
+}
+.question{font-size:16px;font-weight:700;margin:0 0 10px}
+.choices{display:grid;gap:9px}
+.choice{
+  width:100%;display:flex;gap:10px;align-items:flex-start;text-align:left;
+  padding:11px 12px;border:1px solid var(--line);border-radius:13px;background:white;
+  color:var(--ink);cursor:pointer;line-height:1.38;font-size:14px
+}
+.choice:hover{border-color:#9AB8E5;background:#FBFDFF}
+.choice:focus{outline:3px solid rgba(0,61,165,.2);outline-offset:2px}
+.choice-letter{
+  flex:none;width:25px;height:25px;border-radius:50%;
+  display:grid;place-items:center;background:var(--blue-soft);color:var(--blue);
+  font-weight:700
+}
+.feedback{
+  display:none;margin-top:12px;border-radius:14px;padding:13px 14px;border:1px solid var(--line)
+}
+.feedback.show{display:block}
+.feedback.good{background:var(--green-soft);border-color:#B9DDBD}
+.feedback.mid{background:var(--amber-soft);border-color:#E7D47B}
+.feedback.bad{background:var(--red-soft);border-color:#EFB3AE}
+.feedback h4{margin:0 0 5px;font-size:15px}
+.feedback p{margin:0;font-size:13px;line-height:1.42}
+.next-row{display:flex;justify-content:flex-end;gap:9px;margin-top:12px}
+.next{display:none}
+.next.show{display:inline-block}
+
+.metrics{
+  display:flex;gap:8px;flex-wrap:wrap;margin-top:10px
+}
+.metric{
+  flex:1;min-width:135px;background:rgba(255,255,255,.92);
+  border:1px solid var(--line);border-radius:12px;padding:9px 10px
+}
+.metric-label{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted);margin-bottom:5px}
+.track{height:7px;background:#E6EBF2;border-radius:99px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--blue);transition:width .4s ease}
+
+.final{
+  min-height:680px;
+  background:
+    linear-gradient(135deg,rgba(237,245,255,.97),rgba(255,246,238,.97)),
+    url("fondo.png") center/cover no-repeat;
+  padding:28px 24px 35px
+}
+.final-card{
+  max-width:900px;margin:0 auto;background:white;border:1px solid var(--line);
+  border-radius:22px;padding:22px;box-shadow:var(--shadow)
+}
+.result-head{display:flex;gap:14px;align-items:center;margin-bottom:12px}
+.result-icon{
+  width:54px;height:54px;border-radius:16px;display:grid;place-items:center;
+  background:var(--blue-soft);font-size:28px
+}
+.final h2{margin:0;font-size:25px}
+.result-sub{color:var(--muted);margin-top:3px;font-size:13px}
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+.score{
+  border:1px solid var(--line);border-radius:14px;padding:13px;background:#FAFBFD
+}
+.score strong{display:block;font-size:22px;color:var(--blue);margin-bottom:3px}
+.score span{font-size:12px;color:var(--muted)}
+.summary{
+  padding:15px;border-radius:14px;background:var(--blue-soft);border:1px solid #CFE0FA
+}
+.summary h3{margin:0 0 8px;font-size:16px}
+.summary ul{margin:0;padding-left:18px}
+.summary li{margin:6px 0;font-size:13px;line-height:1.4}
+.takeaway{
+  margin-top:14px;padding:15px;border-left:4px solid var(--orange);
+  background:var(--orange-soft);border-radius:0 12px 12px 0
+}
+.takeaway strong{display:block;margin-bottom:4px}
+.takeaway p{margin:0;font-size:14px;line-height:1.45}
+.final-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:16px;flex-wrap:wrap}
+
+@media(max-width:820px){
+  .progress{display:none}
+  .hero{min-height:720px}
+  .hero-copy{width:100%;padding:26px 18px 300px}
+  .hero h1{font-size:30px}
+  .hero-character{height:330px;right:50%;transform:translateX(50%);bottom:-18px}
+  .notice{width:100%}
+  .scene{grid-template-columns:1fr;align-items:start}
+  .character-zone{min-height:260px}
+  .character,.character.small{height:280px;left:50%}
+  .stage-inner{padding:14px}
+  .dialogue-panel{align-self:start}
+  .stage,.stage-inner{min-height:auto}
+  .score-grid{grid-template-columns:1fr}
+  .title{font-size:14px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"></div>
+      <div>
+        <div class="kicker">Comunicación de líderes</div>
+        <div class="title">Escenario · Nuevo comunicado, nuevas prioridades</div>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <span id="progressText">Inicio</span>
+      <div class="progress" aria-hidden="true"><span id="progressFill"></span></div>
+    </div>
+  </header>
+
+  <!-- SCREEN 0: INTRO -->
+  <section class="screen active" id="screen0">
+    <div class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">8:40 a. m. · Faltan pocos minutos para iniciar</div>
+        <h1>Llegó un comunicado importante. ¿Cómo lo conviertes en prioridades claras?</h1>
+        <p>Valeria acaba de recibir un comunicado para la jornada. Tu reto no es repetirlo: es lograr que el equipo entienda qué es prioritario, qué debe hacer y cómo saber que todos quedaron alineados.</p>
+
+        <div class="notice">
+          <div class="notice-head">
+            <div class="notice-label">Comunicado de práctica</div>
+            <div class="practice">Contenido ficticio</div>
+          </div>
+          <h2>Prioridades para la jornada</h2>
+          <div class="priority-list">
+            <div class="priority"><span class="num">1</span><span><strong>Orientación clara:</strong> asegurar que el equipo comunique las indicaciones de forma simple y consistente.</span></div>
+            <div class="priority"><span class="num">2</span><span><strong>Aplicación del lineamiento:</strong> llevar el nuevo mensaje a acciones concretas desde el inicio de la jornada.</span></div>
+            <div class="priority"><span class="num">3</span><span><strong>Experiencia del cliente:</strong> mantener una atención cercana y sin mensajes contradictorios.</span></div>
+          </div>
+        </div>
+
+        <div class="start-actions">
+          <button class="btn btn-primary" onclick="goTo(1)">Iniciar escenario</button>
+        </div>
+      </div>
+      <img class="hero-character" src="valeria.png" alt="Valeria, supervisora de agencia">
+    </div>
+  </section>
+
+  <!-- DECISION 1 -->
+  <section class="screen" id="screen1">
+    <div class="stage">
+      <div class="stage-inner">
+        <div class="step-row">
+          <div class="step-chip">Decisión 1 · Abrir la conversación</div>
+          <div class="timer-chip">Quedan 10 min para iniciar</div>
+        </div>
+        <div class="scene">
+          <div class="character-zone">
+            <img class="character" src="valeria.png" alt="Valeria">
+          </div>
+          <div>
+            <div class="dialogue-panel">
+              <div class="speaker"><span class="speaker-dot"></span><span class="speaker-name">Valeria</span></div>
+              <p class="dialogue">“Equipo, antes de comenzar necesito contarles algo importante que acaba de llegar para la jornada.”</p>
+              <div class="context">El comunicado contiene varias indicaciones. El equipo ya está listo para iniciar y Valeria dispone de pocos minutos para aterrizar el mensaje.</div>
+              <div class="question">¿Cómo debería continuar?</div>
+              <div class="choices">
+                <button class="choice" data-q="1" data-opt="a"><span class="choice-letter">A</span><span>Reenviar el comunicado al grupo y pedir que todos lo lean antes de empezar.</span></button>
+                <button class="choice" data-q="1" data-opt="b"><span class="choice-letter">B</span><span>Leer el comunicado completo, palabra por palabra, para no omitir ningún detalle.</span></button>
+                <button class="choice" data-q="1" data-opt="c"><span class="choice-letter">C</span><span>Explicar primero por qué es importante y resumir las prioridades que el equipo debe llevar a la práctica.</span></button>
+              </div>
+              <div class="feedback" id="fb1"><h4 id="fb1Title"></h4><p id="fb1Text"></p></div>
+              <div class="next-row"><button class="btn btn-primary next" id="next1" onclick="goTo(2)">Continuar</button></div>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="metric-label"><span>Contexto</span><b id="m1v">0%</b></div><div class="track"><div class="fill" id="m1"></div></div></div>
+              <div class="metric"><div class="metric-label"><span>Priorización</span><b id="m2v">0%</b></div><div class="track"><div class="fill" id="m2"></div></div></div>
+              <div class="metric"><div class="metric-label"><span>Comprensión</span><b id="m3v">0%</b></div><div class="track"><div class="fill" id="m3"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DECISION 2 -->
+  <section class="screen" id="screen2">
+    <div class="stage">
+      <div class="stage-inner">
+        <div class="step-row">
+          <div class="step-chip">Decisión 2 · Ordenar prioridades</div>
+          <div class="timer-chip">El equipo pide claridad</div>
+        </div>
+        <div class="scene">
+          <div class="character-zone">
+            <img class="character small" src="diego.png" alt="Diego">
+          </div>
+          <div>
+            <div class="dialogue-panel">
+              <div class="speaker"><span class="speaker-dot"></span><span class="speaker-name">Diego</span></div>
+              <p class="dialogue">“Valeria, entiendo que todo es importante, pero para empezar bien… ¿qué debemos priorizar primero?”</p>
+              <div class="context">Diego está intentando traducir el comunicado a una acción concreta. El resto del equipo escucha la respuesta.</div>
+              <div class="question">¿Qué debería responder Valeria?</div>
+              <div class="choices">
+                <button class="choice" data-q="2" data-opt="a"><span class="choice-letter">A</span><span>“Todo es prioritario. Tengan presente el comunicado completo durante la jornada.”</span></button>
+                <button class="choice" data-q="2" data-opt="b"><span class="choice-letter">B</span><span>“Quedémonos con tres cosas: primero la orientación clara, segundo aplicar el nuevo lineamiento de forma consistente y tercero no descuidar la experiencia del cliente.”</span></button>
+                <button class="choice" data-q="2" data-opt="c"><span class="choice-letter">C</span><span>“Cada uno revise qué parte del comunicado le corresponde y luego me pregunta si tiene dudas.”</span></button>
+              </div>
+              <div class="feedback" id="fb2"><h4 id="fb2Title"></h4><p id="fb2Text"></p></div>
+              <div class="next-row"><button class="btn btn-primary next" id="next2" onclick="goTo(3)">Continuar</button></div>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="metric-label"><span>Contexto</span><b id="m1v2">0%</b></div><div class="track"><div class="fill" id="m1_2"></div></div></div>
+              <div class="metric"><div class="metric-label"><span>Priorización</span><b id="m2v2">0%</b></div><div class="track"><div class="fill" id="m2_2"></div></div></div>
+              <div class="metric"><div class="metric-label"><span>Comprensión</span><b id="m3v2">0%</b></div><div class="track"><div class="fill" id="m3_2"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DECISION 3 -->
+  <section class="screen" id="screen3">
+    <div class="stage">
+      <div class="stage-inner">
+        <div class="step-row">
+          <div class="step-chip">Decisión 3 · Aterrizar el cambio</div>
+          <div class="timer-chip">Camila necesita saber qué cambia</div>
+        </div>
+        <div class="scene">
+          <div class="character-zone">
+            <img class="character small" src="camila.png" alt="Camila">
+          </div>
+          <div>
+            <div class="dialogue-panel">
+              <div class="speaker"><span class="speaker-dot"></span><span class="speaker-name">Camila</span></div>
+              <p class="dialogue">“Entonces, ¿esto cambia todo lo que habíamos coordinado para hoy o solo una parte?”</p>
+              <div class="context">Camila quiere distinguir qué se modifica y qué se mantiene. Una respuesta ambigua puede generar interpretaciones distintas.</div>
+              <div class="question">¿Cómo debería responder Valeria?</div>
+              <div class="choices">
+                <button class="choice" data-q="3" data-opt="a"><span class="choice-letter">A</span><span>“Cambió la prioridad, así que desde ahora enfoquémonos solo en el comunicado.”</span></button>
+                <button class="choice" data-q="3" data-opt="b"><span class="choice-letter">B</span><span>“Se mantiene lo que ya veníamos haciendo; lo nuevo es el énfasis. Desde hoy debemos asegurar que estas tres prioridades estén presentes en cada atención y en nuestros mensajes.”</span></button>
+                <button class="choice" data-q="3" data-opt="c"><span class="choice-letter">C</span><span>“Vamos viendo durante el día. Si aparece algún caso diferente, lo conversamos.”</span></button>
+              </div>
+              <div class="feedback" id="fb3"><h4 id="fb3Title"></h4><p id="fb3Text"></p></div>
+              <div class="next-row"><button class="btn btn-primary next" id="next3" onclick="goTo(4)">Continuar</button></div>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="metric-label"><span>Contexto</span><b id="m1v3">0%</b></div><div class="track"><div class="fill" id="m1_3"></div></div></div>
+              <div class="metric"><div class="metric-label"><span>Priorización</span><b id="m2v3">0%</b></div><div class="track"><div class="fill" id="m2_3"></div></div></div>
+              <div class="metric"><div class="metric-label"><span>Comprensión</span><b id="m3v3">0%</b></div><div class="track"><div class="fill" id="m3_3"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DECISION 4 -->
+  <section class="screen" id="screen4">
+    <div class="stage">
+      <div class="stage-inner">
+        <div class="step-row">
+          <div class="step-chip">Decisión 4 · Comprobar comprensión</div>
+          <div class="timer-chip">Faltan 3 min para iniciar</div>
+        </div>
+        <div class="scene">
+          <div class="character-zone">
+            <img class="character small" src="lucia.png" alt="Lucía">
+          </div>
+          <div>
+            <div class="dialogue-panel">
+              <div class="speaker"><span class="speaker-dot"></span><span class="speaker-name">Lucía</span></div>
+              <p class="dialogue">“Listo, creo que ya está. ¿Empezamos?”</p>
+              <div class="context">El equipo asiente. Valeria necesita decidir si basta con eso o si debe comprobar que todos interpretaron las prioridades de la misma manera.</div>
+              <div class="question">¿Cuál sería el mejor cierre?</div>
+              <div class="choices">
+                <button class="choice" data-q="4" data-opt="a"><span class="choice-letter">A</span><span>“¿Todo claro? Perfecto, iniciemos.”</span></button>
+                <button class="choice" data-q="4" data-opt="b"><span class="choice-letter">B</span><span>“Antes de empezar, Diego dime cuál es nuestra primera prioridad; Camila, ¿qué cambia desde hoy? Y Lucía, ¿qué no debemos descuidar?”</span></button>
+                <button class="choice" data-q="4" data-opt="c"><span class="choice-letter">C</span><span>“Si surge alguna duda durante la atención, me escriben y la resolvemos.”</span></button>
+              </div>
+              <div class="feedback" id="fb4"><h4 id="fb4Title"></h4><p id="fb4Text"></p></div>
+              <div class="next-row"><button class="btn btn-primary next" id="next4" onclick="finishScenario()">Ver resultado</button></div>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="metric-label"><span>Contexto</span><b id="m1v4">0%</b></div><div class="track"><div class="fill" id="m1_4"></div></div></div>
+              <div class="metric"><div class="metric-label"><span>Priorización</span><b id="m2v4">0%</b></div><div class="track"><div class="fill" id="m2_4"></div></div></div>
+              <div class="metric"><div class="metric-label"><span>Comprensión</span><b id="m3v4">0%</b></div><div class="track"><div class="fill" id="m3_4"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL -->
+  <section class="screen" id="screen5">
+    <div class="final">
+      <div class="final-card">
+        <div class="result-head">
+          <div class="result-icon" id="resultIcon">✓</div>
+          <div>
+            <h2 id="resultTitle">Resultado del escenario</h2>
+            <div class="result-sub" id="resultSub"></div>
+          </div>
+        </div>
+
+        <div class="score-grid">
+          <div class="score"><strong id="scoreContext">0%</strong><span>Contexto: explicar qué ocurre y por qué importa.</span></div>
+          <div class="score"><strong id="scorePriority">0%</strong><span>Priorización: convertir información en acciones claras.</span></div>
+          <div class="score"><strong id="scoreUnderstand">0%</strong><span>Comprensión: verificar que todos interpretaron lo mismo.</span></div>
+        </div>
+
+        <div class="summary">
+          <h3>Lo que ocurrió en tu conversación</h3>
+          <ul id="resultList"></ul>
+        </div>
+
+        <div class="takeaway">
+          <strong>Idea clave</strong>
+          <p>Un comunicado informa. El líder lo convierte en dirección: da contexto, ordena prioridades, aclara qué cambia y comprueba comprensión antes de actuar.</p>
+        </div>
+
+        <div class="final-actions">
+          <button class="btn btn-secondary" onclick="restart()">Reintentar escenario</button>
+          <button class="btn btn-primary" onclick="showCourseMessage()">Continuar con el curso</button>
+        </div>
+        <div id="courseMessage" style="display:none;margin-top:12px;padding:12px;border-radius:12px;background:#F7F9FC;border:1px solid var(--line);font-size:13px;color:var(--muted)">
+          Escenario completado. Regresa a Easygenerator para continuar con la siguiente parte del curso.
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const state={
+  context:0,
+  priority:0,
+  understand:0,
+  answers:{}
+};
+
+const feedbackData={
+  1:{
+    a:{tone:"mid",title:"Compartir no es lo mismo que alinear",text:"El equipo recibe la información, pero cada persona puede interpretar qué es prioritario de manera distinta.",delta:[20,5,5]},
+    b:{tone:"mid",title:"Completa, pero poco priorizada",text:"Leer todo evita omisiones, pero no ayuda a distinguir qué necesita atención inmediata.",delta:[35,15,5]},
+    c:{tone:"good",title:"Buen inicio: contexto + prioridades",text:"Valeria traduce el comunicado a una referencia común antes de pedir acciones.",delta:[55,35,10]}
+  },
+  2:{
+    a:{tone:"mid",title:"Todo importante = nada priorizado",text:"Si todo tiene el mismo peso, el equipo no sabe qué debe colocar primero en la práctica.",delta:[0,15,5]},
+    b:{tone:"good",title:"Prioridades visibles y accionables",text:"Ordenar el mensaje en tres focos reduce la ambigüedad y facilita que todos actúen con el mismo criterio.",delta:[0,45,10]},
+    c:{tone:"bad",title:"El criterio queda fragmentado",text:"Cada persona puede construir su propia interpretación del comunicado.",delta:[0,5,0]}
+  },
+  3:{
+    a:{tone:"bad",title:"El cambio queda sobredimensionado",text:"Presentar el comunicado como un reemplazo total puede generar confusión y abandonar prácticas que se mantienen.",delta:[5,5,0]},
+    b:{tone:"good",title:"Claridad sobre qué cambia y qué se mantiene",text:"La respuesta evita extremos y convierte el cambio en una indicación concreta para la jornada.",delta:[20,15,15]},
+    c:{tone:"mid",title:"Demasiado abierto",text:"Posponer la definición deja al equipo sin una referencia común al iniciar.",delta:[5,5,0]}
+  },
+  4:{
+    a:{tone:"mid",title:"Preguntar “¿todo claro?” no comprueba comprensión",text:"El equipo puede asentir aunque cada persona haya interpretado algo distinto.",delta:[0,0,15]},
+    b:{tone:"good",title:"Comprobar es mejor que asumir",text:"Pedir que el equipo explique las prioridades con sus propias palabras permite detectar malentendidos antes de iniciar.",delta:[0,5,55]},
+    c:{tone:"bad",title:"Las dudas aparecen cuando ya estamos actuando",text:"Esperar a que surja un problema aumenta el riesgo de mensajes inconsistentes.",delta:[0,0,5]}
+  }
+};
+
+function clamp(v){return Math.max(0,Math.min(100,v));}
+
+function setProgress(screen){
+  const labels=["Inicio","1 de 4","2 de 4","3 de 4","4 de 4","Resultado"];
+  const widths=[0,20,40,60,80,100];
+  document.getElementById("progressText").textContent=labels[screen]||"";
+  document.getElementById("progressFill").style.width=widths[screen]+"%";
+}
+
+function goTo(n){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById("screen"+n).classList.add("active");
+  setProgress(n);
+  syncMetrics(n);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function syncMetrics(n){
+  const suffix=n===1?"":String(n);
+  const ids = n===1 ? ["m1","m2","m3","m1v","m2v","m3v"]
+                    : ["m1_"+n,"m2_"+n,"m3_"+n,"m1v"+n,"m2v"+n,"m3v"+n];
+  const values=[state.context,state.priority,state.understand];
+  for(let i=0;i<3;i++){
+    const bar=document.getElementById(ids[i]);
+    const val=document.getElementById(ids[i+3]);
+    if(bar) bar.style.width=values[i]+"%";
+    if(val) val.textContent=values[i]+"%";
+  }
+}
+
+document.querySelectorAll(".choice").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const q=Number(btn.dataset.q);
+    const opt=btn.dataset.opt;
+    if(state.answers[q]) return;
+
+    state.answers[q]=opt;
+    const d=feedbackData[q][opt];
+    state.context=clamp(state.context+d.delta[0]);
+    state.priority=clamp(state.priority+d.delta[1]);
+    state.understand=clamp(state.understand+d.delta[2]);
+
+    const parent=btn.closest(".dialogue-panel");
+    parent.querySelectorAll(".choice").forEach(x=>x.disabled=true);
+
+    btn.style.borderColor = d.tone==="good" ? "#83BF8A" : d.tone==="bad" ? "#E7A09A" : "#DCC35C";
+    btn.style.background = d.tone==="good" ? "var(--green-soft)" : d.tone==="bad" ? "var(--red-soft)" : "var(--amber-soft)";
+
+    const fb=document.getElementById("fb"+q);
+    fb.className="feedback show "+d.tone;
+    document.getElementById("fb"+q+"Title").textContent=d.title;
+    document.getElementById("fb"+q+"Text").textContent=d.text;
+    document.getElementById("next"+q).classList.add("show");
+    syncMetrics(q);
+  });
+});
+
+function finishScenario(){
+  goTo(5);
+  const total=(state.context+state.priority+state.understand)/3;
+  let title,sub,icon;
+  if(total>=80){
+    title="Alineación sólida";
+    sub="Convertiste el comunicado en dirección clara para el equipo.";
+    icon="✓";
+  }else if(total>=55){
+    title="Alineación parcial";
+    sub="El equipo recibió el mensaje, pero aún quedaron espacios de interpretación.";
+    icon="↗";
+  }else{
+    title="Riesgo de confusión";
+    sub="La información llegó al equipo, pero faltó convertirla en prioridades compartidas.";
+    icon="!";
+  }
+  document.getElementById("resultTitle").textContent=title;
+  document.getElementById("resultSub").textContent=sub;
+  document.getElementById("resultIcon").textContent=icon;
+  document.getElementById("scoreContext").textContent=state.context+"%";
+  document.getElementById("scorePriority").textContent=state.priority+"%";
+  document.getElementById("scoreUnderstand").textContent=state.understand+"%";
+
+  const list=document.getElementById("resultList");
+  list.innerHTML="";
+  const items=[];
+  items.push(state.context>=65
+    ? "Diste suficiente contexto para que el equipo entendiera por qué el comunicado era importante."
+    : "Podías dar más contexto antes de pasar a la instrucción.");
+  items.push(state.priority>=65
+    ? "Ordenaste la información en prioridades visibles y accionables."
+    : "Faltó jerarquizar la información para que el equipo supiera qué colocar primero.");
+  items.push(state.understand>=65
+    ? "Comprobaste comprensión antes de iniciar la jornada."
+    : "Quedó riesgo de asumir que todos entendieron lo mismo.");
+  items.forEach(t=>{
+    const li=document.createElement("li");li.textContent=t;list.appendChild(li);
+  });
+}
+
+function restart(){
+  state.context=0;state.priority=0;state.understand=0;state.answers={};
+  document.querySelectorAll(".choice").forEach(btn=>{
+    btn.disabled=false;btn.style.borderColor="";btn.style.background="";
+  });
+  document.querySelectorAll(".feedback").forEach(f=>f.className="feedback");
+  document.querySelectorAll(".next").forEach(n=>n.classList.remove("show"));
+  document.getElementById("courseMessage").style.display="none";
+  goTo(0);
+}
+
+function showCourseMessage(){
+  document.getElementById("courseMessage").style.display="block";
+}
+</script>
+</body>
+</html>
