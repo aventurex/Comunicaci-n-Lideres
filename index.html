@@ -1,1 +1,171 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El primer minuto cuenta</title>
+<style>
+:root{
+  --azul:#003DA5;--azul2:#002A70;--naranja:#FF6B00;--celeste:#EEF5FF;
+  --texto:#172033;--muted:#5F6B7A;--borde:#DCE3EC;--verde:#EAF6EC;
+  --amarillo:#FFF7D6;--rojo:#FDECEC;--blanco:#fff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#fff;font-family:Arial,Helvetica,sans-serif;color:var(--texto)}
+body{padding:8px}
+.app{max-width:1000px;margin:0 auto;background:white;border:1px solid var(--borde);border-radius:18px;overflow:hidden}
+.hero{
+  min-height:220px;padding:22px;display:flex;align-items:flex-end;color:white;
+  background:
+    linear-gradient(90deg,rgba(0,35,100,.82),rgba(0,45,125,.45),rgba(0,0,0,.05)),
+    url("equipo.png") center/cover no-repeat;
+}
+.hero h1{margin:0 0 8px;font-size:27px;line-height:1.12}
+.hero p{margin:0;max-width:650px;font-size:15px;line-height:1.45}
+.tag{display:inline-block;margin-bottom:9px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.16);font-size:12px}
+.content{padding:20px}
+.intro{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.box{border:1px solid var(--borde);border-radius:14px;padding:14px;background:#FAFBFD}
+.box.alt{background:var(--celeste)}
+.box h2{font-size:16px;margin:0 0 6px}
+.box p,.box li{font-size:13px;line-height:1.42;color:var(--muted)}
+.box p{margin:0}.box ul{margin:0;padding-left:18px}
+.question h2{font-size:19px;margin:0 0 4px}
+.help{font-size:13px;color:var(--muted);margin-bottom:10px}
+.options{display:grid;gap:10px}
+.opt{
+  width:100%;text-align:left;padding:12px;border:1px solid var(--borde);border-radius:13px;
+  background:white;cursor:pointer;font-size:14px;line-height:1.38;display:flex;gap:10px;align-items:flex-start
+}
+.opt:hover{border-color:#9DBCE8}
+.badge{width:25px;height:25px;border-radius:50%;background:var(--celeste);color:var(--azul);font-weight:700;display:grid;place-items:center;flex:none}
+.opt.good{background:var(--verde);border-color:#9BC9A0}
+.opt.mid{background:var(--amarillo);border-color:#E2CC74}
+.opt.bad{background:var(--rojo);border-color:#E8A5A0}
+.feedback{display:none;margin-top:14px;padding:14px;border-radius:14px;border:1px solid var(--borde)}
+.feedback.show{display:block}
+.feedback h3{font-size:16px;margin:0 0 5px}
+.feedback p{margin:0 0 10px;font-size:13px;line-height:1.45}
+.reacts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.react{background:rgba(255,255,255,.78);border:1px solid rgba(0,0,0,.07);border-radius:11px;padding:10px}
+.react b{display:block;color:var(--azul2);font-size:12px;margin-bottom:3px}
+.react span{font-size:12px;line-height:1.35;color:#425066}
+.key{display:none;margin-top:14px;background:linear-gradient(135deg,#F0F6FF,#FFF5EC);border:1px solid var(--borde);border-radius:14px;padding:14px}
+.key.show{display:block}
+.key h3{margin:0 0 6px;font-size:16px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.pill{font-size:12px;font-weight:700;color:var(--azul2);background:white;border:1px solid var(--borde);border-radius:999px;padding:6px 9px}
+.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+button.action{border:0;border-radius:10px;padding:9px 13px;font-weight:700;cursor:pointer}
+#reset{background:#EEF2F7;color:#2D3B50}
+#showKey{background:var(--naranja);color:white;display:none}
+#showKey.visible{display:inline-block}
+@media(max-width:700px){
+  .hero{min-height:190px;padding:18px;background-position:60% center}
+  .hero h1{font-size:23px}
+  .intro,.reacts{grid-template-columns:1fr}
+  .content{padding:14px}
+}
+</style>
+</head>
+<body>
+<main class="app">
+  <section class="hero">
+    <div>
+      <div class="tag">8:50 a. m. · Antes de iniciar la atención</div>
+      <h1>Una prioridad cambió. ¿Cómo alineas al equipo en pocos minutos?</h1>
+      <p>Valeria, supervisora de agencia, necesita comunicar un cambio sin generar confusión ni dejar dudas para después.</p>
+    </div>
+  </section>
 
+  <section class="content">
+    <div class="intro">
+      <div class="box">
+        <h2>La situación</h2>
+        <p>La nueva prioridad modifica parte de lo coordinado para la jornada. El equipo ya está listo para empezar y Valeria dispone de pocos minutos para explicar el cambio.</p>
+      </div>
+      <div class="box alt">
+        <h2>Lo que observa</h2>
+        <ul>
+          <li>Diego pregunta cuando algo no le queda claro.</li>
+          <li>Camila suele asentir, aunque puede interpretar distinto la indicación.</li>
+          <li>El resto del equipo espera una orientación concreta.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="question">
+      <h2>¿Cómo iniciarías la conversación?</h2>
+      <div class="help">Selecciona la alternativa que usarías en una reunión breve de inicio de jornada.</div>
+
+      <div class="options">
+        <button class="opt" data-id="a" type="button"><span class="badge">A</span><span>“Equipo, desde hoy cambia la prioridad. Necesito que todos hagan lo siguiente…”</span></button>
+        <button class="opt" data-id="b" type="button"><span class="badge">B</span><span>“Equipo, tenemos un cambio para hoy. Primero quiero contarles qué cambió y por qué; luego revisamos qué debemos ajustar y sus dudas.”</span></button>
+        <button class="opt" data-id="c" type="button"><span class="badge">C</span><span>“Tenemos poco tiempo. Revisen el mensaje que les envié y, si algo no se entiende, lo vemos después.”</span></button>
+      </div>
+
+      <div id="feedback" class="feedback" aria-live="polite">
+        <h3 id="fbTitle"></h3>
+        <p id="fbText"></p>
+        <div class="reacts">
+          <div class="react"><b>Diego</b><span id="r1"></span></div>
+          <div class="react"><b>Camila</b><span id="r2"></span></div>
+          <div class="react"><b>Equipo</b><span id="r3"></span></div>
+        </div>
+      </div>
+
+      <div id="key" class="key">
+        <h3>La clave del primer minuto</h3>
+        <p style="margin:0;font-size:13px;line-height:1.45;color:var(--muted)">Una comunicación breve puede ser clara sin ser abrupta. Dar contexto, explicar el mensaje y abrir un espacio corto para comprobar comprensión reduce interpretaciones distintas.</p>
+        <div class="pills">
+          <span class="pill">Contexto</span>
+          <span class="pill">Mensaje claro</span>
+          <span class="pill">Dudas</span>
+          <span class="pill">Acción</span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="reset" class="action" type="button">Reintentar</button>
+        <button id="showKey" class="action" type="button">Ver clave</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+const data={
+  a:{cls:"mid",title:"Rápida, pero con poco contexto",text:"La indicación es directa, pero el equipo puede ejecutar sin comprender por qué cambió la prioridad.",r1:"Pregunta qué cambió y por qué.",r2:"Asiente, pero no tiene claro qué debe ajustar.",r3:"Empieza a actuar con dudas no expresadas."},
+  b:{cls:"good",title:"Buen inicio: contexto + orientación",text:"Explicar qué cambió y por qué prepara al equipo para comprender la indicación. Abrir un espacio breve para dudas ayuda a detectar interpretaciones diferentes.",r1:"Comprende el motivo y formula una duda concreta.",r2:"Puede contrastar lo que entendió antes de iniciar.",r3:"Sale con una referencia común y un siguiente paso claro."},
+  c:{cls:"bad",title:"Ahorra minutos, pero traslada la confusión",text:"Dejar toda la explicación en un mensaje escrito evita comprobar qué entendió cada persona y deja las dudas para cuando la atención ya empezó.",r1:"Guarda su pregunta para después.",r2:"Interpreta el mensaje según lo coordinado previamente.",r3:"Inicia con versiones distintas de la prioridad."}
+};
+const opts=[...document.querySelectorAll(".opt")];
+const fb=document.getElementById("feedback");
+const key=document.getElementById("key");
+const showKey=document.getElementById("showKey");
+
+opts.forEach(btn=>btn.addEventListener("click",()=>{
+  opts.forEach(x=>x.classList.remove("good","mid","bad"));
+  const d=data[btn.dataset.id];
+  btn.classList.add(d.cls);
+  fb.className="feedback show "+d.cls;
+  document.getElementById("fbTitle").textContent=d.title;
+  document.getElementById("fbText").textContent=d.text;
+  document.getElementById("r1").textContent=d.r1;
+  document.getElementById("r2").textContent=d.r2;
+  document.getElementById("r3").textContent=d.r3;
+  key.classList.remove("show");
+  showKey.classList.add("visible");
+}));
+
+document.getElementById("reset").addEventListener("click",()=>{
+  opts.forEach(x=>x.classList.remove("good","mid","bad"));
+  fb.className="feedback";
+  key.classList.remove("show");
+  showKey.classList.remove("visible");
+});
+
+showKey.addEventListener("click",()=>key.classList.add("show"));
+</script>
+</body>
+</html>
